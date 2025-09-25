@@ -12,6 +12,13 @@ class Proxy::TemplatesUnattendedApi < Sinatra::Base
     log_halt 400, e
   end
 
+  get "/netboot/:os_id" do |os_id|
+    # require 'pry';binding.pry
+    log_halt(nil, "Failed to proxy /netboot for #{params.inspect}: ") do
+      Proxy::Templates::TemplateProxyRequest.new.get(['netboot', os_id], request.env, params)
+    end
+  end
+
   get "/:kind/:template/:hostgroup" do |kind, template, hostgroup|
     log_halt(nil, "Failed to retrieve #{kind} hostgroup template for #{params.inspect}: ") do
       Proxy::Templates::TemplateProxyRequest.new.get([kind, template, hostgroup], request.env, params)
